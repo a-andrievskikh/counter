@@ -1,0 +1,23 @@
+.counterDisplay {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  width: 590px;
+  height: 250px;
+  border-radius: 20px;
+  background-color: #6ee0f8;
+  font-size: 100px;
+  font-weight: 700;
+  color: #2e2d36;
+}
+
+.counterDisplayStopNumber {
+  color: #de0045;
+}
+
+.setStyle {
+  font-size: 36px;
+}
