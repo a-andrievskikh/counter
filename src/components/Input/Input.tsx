@@ -27,7 +27,6 @@ export const Input: FC<InputPropsType> = (props) => {
              type="number"
              className={s.input}
              min={props.minCount} max={props.maxCount}
-        // onInput={handleChange}
              onChange={e => props.setCount(Number(e.currentTarget.value))}
              onFocus={() => onFocusHandler(false)}
              onBlur={e => {
