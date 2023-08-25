@@ -1,33 +1,42 @@
-import React, { FC } from 'react'
 import s from '../Button/Button.module.css'
+import { ValuesType } from '../../App'
 
 export type ButtonPropsType = {
   title: string
-  count: number
-  onClick: () => void
-  disabled: boolean
-  minCount: number
-  maxCount: number
-  resetCount: number
+  values: ValuesType
   isActiveSet?: boolean
+  onClickHandler?: () => void
+  disabled: boolean
 }
-export const Button: FC<ButtonPropsType> = (props) => {
+export const Button = (
+  { title, values, isActiveSet, onClickHandler, disabled }: ButtonPropsType) => {
 
   const buttonStyle = `
     ${s.button}
-    ${props.title === 'DEC' && props.count <= props.minCount ? s.disabled
-    : props.title === 'RESET' && props.count === props.resetCount ? s.disabled
-      : props.title === 'INC' && props.count >= props.maxCount ? s.disabled
-        : props.title === 'SET' && props.isActiveSet ? s.disabled
+    ${title === 'DEC' && values.startValue <= values.minValue ? s.disabled
+    : title === 'RESET' && values.startValue === values.resetValue ? s.disabled
+      : title === 'INC' && values.startValue >= values.maxValue ? s.disabled
+        : title === 'SET' && isActiveSet ? s.disabled
           : ''}
     `
 
   return (
-    <button className={buttonStyle}
-            onClick={props.onClick}
-            disabled={props.disabled}
-    >
-      {props.title}
-    </button>
+    title === 'SET' ? (
+      <button className={buttonStyle}
+              onClick={onClickHandler}
+              disabled={disabled}
+      >
+        {title}
+      </button>
+    ) : (
+      <button className={buttonStyle}
+              onClick={onClickHandler}
+              disabled={disabled}
+      >
+        {title}
+      </button>
+    )
+
+
   )
 }

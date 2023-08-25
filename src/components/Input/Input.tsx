@@ -1,45 +1,62 @@
-import { FC } from 'react'
 import s from './Input.module.css'
+import { SetterType, ValueType } from '../../App'
 
 export type InputPropsType = {
+  inputID: string
   title: string
-  count: number
-  minCount: number
-  maxCount: number
-  setCount: (counter: number) => void
-  setMinCount: (counter: number) => void
-  setMaxCount: (counter: number) => void
+  frameID: string
+  frameValues: ValueType
+  frameSetters: SetterType
   isActiveSet: boolean
   setIsActiveSet: (isActiveSet: boolean) => void
 }
 
-export const Input: FC<InputPropsType> = (props) => {
+export const Input = (
+  {
+    inputID, title, frameID, frameValues,
+    frameSetters, isActiveSet, setIsActiveSet,
+  }: InputPropsType) => {
 
-  const onFocusHandler = (value: boolean) => props.setIsActiveSet(value)
-
+  const onFocusHandler = (value: boolean) => setIsActiveSet(value)
+  const inputValue = inputID === 'max' ? frameValues.maxValue
+    : inputID === 'min value' ? frameValues.minValue
+      : frameValues.startValue
   return (
     <div className={s.inputWrapper}>
-      <div className={s.value}>{props.title}</div>
-      <input value={props.title === 'max value' ? props.maxCount
-        : props.title === 'min value' ? props.minCount
-          : props.count
-      }
+      <div className={s.value}>{title}</div>
+      <input value={inputValue}
              type="number"
              className={s.input}
-             min={props.minCount} max={props.maxCount}
-             onChange={e => props.setCount(Number(e.currentTarget.value))}
-             onFocus={() => onFocusHandler(false)}
+             onChange={e => {
+               if (inputID === 'max') {
+                 frameSetters.setMaxValue(Number(e.currentTarget.value))
+               }
+               if (inputID === 'min') {
+                 frameSetters.setMinValue(Number(e.currentTarget.value))
+               }
+               if (inputID === 'start') {
+                 console.log(Number(e.currentTarget.value))
+                 frameSetters.setStartValue(Number(e.currentTarget.value))
+               }
+             }
+             }
+             onFocus={() => {
+               onFocusHandler(false)
+               console.log(isActiveSet)
+             }}
              onBlur={e => {
-               if (props.title === 'max value') {
-                 props.setMaxCount(Number(e.currentTarget.value))
+               if (inputID === 'max') {
+                 onFocusHandler(true)
+                 frameSetters.setMaxValue(Number(e.currentTarget.value))
                }
-               if (props.title === 'min value') {
-                 props.setMinCount(Number(e.currentTarget.value))
+               if (inputID === 'min') {
+                 onFocusHandler(true)
+                 frameSetters.setMinValue(Number(e.currentTarget.value))
                }
-               if (props.title === 'start value') {
-                 props.setCount(Number(e.currentTarget.value))
+               if (inputID === 'start') {
+                 onFocusHandler(true)
+                 frameSetters.setStartValue(Number(e.currentTarget.value))
                }
-               onFocusHandler(true)
              }
              }
       />
