@@ -5,22 +5,34 @@ import { ValuesType } from '../../../App'
 export type FrameDisplayPropsType = {
   frameID: string
   values: ValuesType
-  setValues: () => void
+  setCounterValue: (value: number) => void
+  setMinValue: (value: number) => void
+  setMaxValue: (value: number) => void
+  setStartValue: (value: number) => void
   isActiveSet: boolean
   setIsActiveSet: (isActiveSet: boolean) => void
 }
 
 export const FrameDisplay = (
-  { frameID, values, setValues, isActiveSet, setIsActiveSet }: FrameDisplayPropsType) => {
+  {
+    frameID, values, isActiveSet, setIsActiveSet,
+    setMinValue, setMaxValue, setStartValue, setCounterValue,
+  }: FrameDisplayPropsType) => {
   const counterDisplayStyle =
     `${s.counterDisplay}
-     ${values.startValue >= values.maxValue || values.startValue <= values.minValue ?
+     ${values.counterValue <= values.minValue || values.counterValue >= values.maxValue ?
       s.counterDisplayStopNumber
       : ''} `
 
+  const incorrectStartValueStyle = `
+  ${values.startValue < values.minValue || values.startValue > values.maxValue ?
+    s.counterDisplayStopNumber
+    : ''}
+  `
+
   const inputs = [
-    { inputID: 'max', title: 'max value' },
     { inputID: 'min', title: 'min value' },
+    { inputID: 'max', title: 'max value' },
     { inputID: 'start', title: 'start value' },
   ]
 
@@ -36,8 +48,11 @@ export const FrameDisplay = (
                          inputID={i.inputID}
                          title={i.title}
                          frameID={frameID}
-                         frameValues={frameValues}
-                         frameSetters={frameSetters}
+                         values={values}
+                         setMinValue={setMinValue}
+                         setMaxValue={setMaxValue}
+                         setStartValue={setStartValue}
+                         setCounterValue={setCounterValue}
                          isActiveSet={isActiveSet}
                          setIsActiveSet={setIsActiveSet}
                   />
@@ -48,8 +63,10 @@ export const FrameDisplay = (
         ) : (
           <>
             {
-              !isActiveSet ? (<div>{frameValues.countValue}</div>) :
-                (<div className={s.setStyle}>Enter values and press 'SET'</div>)
+              isActiveSet ? <div>{values.counterValue}</div> :
+                !isActiveSet && (values.startValue < values.minValue || values.startValue > values.maxValue) ?
+                  <div className={`${s.setStyle} ${incorrectStartValueStyle}`}>Incorrect 'start value'</div> :
+                  <div className={`${s.setStyle}`}>Enter values and press 'SET'</div>
             }
           </>)
       }

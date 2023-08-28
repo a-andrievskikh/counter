@@ -18,7 +18,7 @@ export const App = () => {
     { frameID: 'settings' },
     { frameID: 'counter' },
   ]
-
+  const [isActiveSet, setIsActiveSet] = useState<boolean>(true)
   const [values, setValues] = useState<ValuesType>({
     counterValue: 0,
     startValue: 0,
@@ -26,7 +26,27 @@ export const App = () => {
     maxValue: 0,
     resetValue: 0,
   })
-
+  const increaseCounterValue = () => {
+    setValues({ ...values, counterValue: values.counterValue + 1 })
+  }
+  const decreaseCounterValue = () => {
+    setValues({ ...values, counterValue: values.counterValue - 1 })
+  }
+  const resetCounterValue = () => {
+    setValues({ ...values, counterValue: values.counterValue = values.resetValue })
+  }
+  const setCounterValue = (value: number) => {
+    setValues({ ...values, counterValue: value })
+  }
+  const setMinValue = (value: number) => {
+    setValues({ ...values, minValue: value })
+  }
+  const setMaxValue = (value: number) => {
+    setValues({ ...values, maxValue: value })
+  }
+  const setStartValue = (value: number) => {
+    setValues({ ...values, startValue: value })
+  }
 
   console.log('App rendered')
   return (
@@ -37,7 +57,15 @@ export const App = () => {
             <Frame key={f.frameID}
                    frameID={f.frameID}
                    values={values}
-                   setValues={() => setValues(values)}
+                   increaseCounterValue={increaseCounterValue}
+                   decreaseCounterValue={decreaseCounterValue}
+                   resetCounterValue={resetCounterValue}
+                   setCounterValue={setCounterValue}
+                   setMinValue={setMinValue}
+                   setMaxValue={setMaxValue}
+                   setStartValue={setStartValue}
+                   isActiveSet={isActiveSet}
+                   setIsActiveSet={setIsActiveSet}
             />
           )
         })

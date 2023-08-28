@@ -7,27 +7,46 @@ import { ValuesType } from '../../App'
 export type FramePropsType = {
   frameID: string
   values: ValuesType
-  setValues: (values: ValuesType) => void
+  increaseCounterValue: () => void
+  decreaseCounterValue: () => void
+  resetCounterValue: () => void
+  setCounterValue: (value: number) => void
+  setMinValue: (value: number) => void
+  setMaxValue: (value: number) => void
+  setStartValue: (value: number) => void
+  isActiveSet: boolean
+  setIsActiveSet: (isActiveSet: boolean) => void
 }
 
 export const Frame = (
-  { frameID, values, setValues }: FramePropsType) => {
+  {
+    frameID, values, increaseCounterValue, decreaseCounterValue, resetCounterValue,
+    setMinValue, setMaxValue, setStartValue, setCounterValue, isActiveSet, setIsActiveSet,
+  }: FramePropsType) => {
 
-  const [isActiveSet, setIsActiveSet] = useState<boolean>(false)
 
   return (
     <div className={s.main}>
       <FrameDisplay frameID={frameID}
                     values={values}
-                    setValues={() => setValues(values)}
+                    setCounterValue={setCounterValue}
+                    setMinValue={(value) => setMinValue(value)}
+                    setMaxValue={(value) => setMaxValue(value)}
+                    setStartValue={(value) => setStartValue(value)}
                     isActiveSet={isActiveSet}
                     setIsActiveSet={setIsActiveSet}
       />
       <FrameMenu frameID={frameID}
                  values={values}
-                 setValues={() => setValues(values)}
                  isActiveSet={isActiveSet}
                  setIsActiveSet={setIsActiveSet}
+                 setCounterValue={setCounterValue}
+                 setStartValue={setStartValue}
+                 increaseCounterValue={increaseCounterValue}
+                 decreaseCounterValue={decreaseCounterValue}
+                 resetCounterValue={resetCounterValue}
+                 setMinValue={(value) => setMinValue(value)}
+                 setMaxValue={(value) => setMaxValue(value)}
       />
     </div>
   )

@@ -6,24 +6,28 @@ export type ButtonPropsType = {
   values: ValuesType
   isActiveSet?: boolean
   onClickHandler?: () => void
+  onClickSetButtonHandler?: (value: boolean) => void
   disabled: boolean
 }
 export const Button = (
-  { title, values, isActiveSet, onClickHandler, disabled }: ButtonPropsType) => {
+  { title, values, isActiveSet, onClickHandler, onClickSetButtonHandler, disabled }: ButtonPropsType) => {
 
   const buttonStyle = `
     ${s.button}
-    ${title === 'DEC' && values.startValue <= values.minValue ? s.disabled
-    : title === 'RESET' && values.startValue === values.resetValue ? s.disabled
-      : title === 'INC' && values.startValue >= values.maxValue ? s.disabled
-        : title === 'SET' && isActiveSet ? s.disabled
+    ${title === 'DEC' && (values.counterValue <= values.minValue || values.minValue >= values.maxValue) ? s.disabled
+    : title === 'RESET' && values.counterValue === values.resetValue ? s.disabled
+      : title === 'INC' && (values.counterValue >= values.maxValue || values.maxValue <= values.minValue) ? s.disabled
+        : title === 'SET' && (isActiveSet || isActiveSet || values.startValue < values.minValue || values.startValue > values.maxValue) ? s.disabled
           : ''}
     `
 
   return (
     title === 'SET' ? (
       <button className={buttonStyle}
-              onClick={onClickHandler}
+              onClick={() => {
+                isActiveSet = true
+                onClickSetButtonHandler?.(isActiveSet)
+              }}
               disabled={disabled}
       >
         {title}
@@ -36,7 +40,5 @@ export const Button = (
         {title}
       </button>
     )
-
-
   )
 }
