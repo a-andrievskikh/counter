@@ -1,57 +1,42 @@
 import s from './FrameMenu.module.css'
 import { Button } from '../../Button/Button'
-import { ValuesType } from '../../../App'
+import { StateT, ViewsT } from '../../../App'
 
-export type FrameMenuPropsType = {
-  frameID: string
-  values: ValuesType
+export type FrameMenuPT = {
+  view: ViewsT
+  state: StateT
   isActiveSet: boolean
-  setIsActiveSet: (isActiveSet: boolean) => void
-  increaseCounterValue: () => void
-  decreaseCounterValue: () => void
-  resetCounterValue: () => void
-  setStartValue: (value: number) => void
-  setCounterValue: (value: number) => void
-  setMinValue: (value: number) => void
-  setMaxValue: (value: number) => void
+  onClickSetButtonHandler: (value: boolean) => void
 }
 
-export const FrameMenu = (
-  {
-    frameID, values, setStartValue, isActiveSet, setIsActiveSet,
-    increaseCounterValue, decreaseCounterValue, resetCounterValue, setCounterValue, setMinValue, setMaxValue,
-  }: FrameMenuPropsType) => {
+export const FrameMenu = ({ view, state, isActiveSet, onClickSetButtonHandler }: FrameMenuPT) => {
+  const incButtonDisabledStatus =
+    state.values.counterValue >= state.values.maxValue || state.values.maxValue <= state.values.minValue
+  const resButtonDisabledStatus =
+    state.values.counterValue === state.values.resetValue
+  const decButtonDisabledStatus =
+    state.values.counterValue <= state.values.minValue || state.values.minValue >= state.values.maxValue
+  const setButtonDisabledStatus =
+    isActiveSet || state.values.startValue < state.values.minValue || state.values.startValue > state.values.maxValue
 
-  const incButtonDisabledStatus = values.counterValue >= values.maxValue || values.maxValue <= values.minValue
-  const resButtonDisabledStatus = values.counterValue === values.resetValue
-  const decButtonDisabledStatus = values.counterValue <= values.minValue || values.minValue >= values.maxValue
-  const setButtonDisabledStatus = isActiveSet || values.startValue < values.minValue || values.startValue > values.maxValue
-
-  const onClickSetButtonHandler = (value: boolean) => {
-    setStartValue(values.startValue)
-    setMinValue(values.minValue)
-    setMaxValue(values.maxValue)
-    setCounterValue(values.startValue)
-    setIsActiveSet(value)
-  }
 
   return (
     <div className={s.counterMenu}>
       {
-        frameID === 'settings' ?
+        view === 'settings' ?
           <Button title={'SET'}
-                  values={values}
+                  values={state.values}
                   isActiveSet={isActiveSet}
                   onClickSetButtonHandler={onClickSetButtonHandler}
                   disabled={setButtonDisabledStatus}
           />
           :
           <>
-            <Button title={'DEC'} values={values} onClickHandler={decreaseCounterValue}
+            <Button title={'DEC'} values={state.values} onClickHandler={state.controls.decValue}
                     disabled={decButtonDisabledStatus} />
-            <Button title={'RESET'} values={values} onClickHandler={resetCounterValue}
+            <Button title={'RESET'} values={state.values} onClickHandler={state.controls.resValue}
                     disabled={resButtonDisabledStatus} />
-            <Button title={'INC'} values={values} onClickHandler={increaseCounterValue}
+            <Button title={'INC'} values={state.values} onClickHandler={state.controls.incValue}
                     disabled={incButtonDisabledStatus} />
           </>
       }

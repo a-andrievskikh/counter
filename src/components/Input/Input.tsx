@@ -1,67 +1,54 @@
 import s from './Input.module.css'
-import { ValuesType } from '../../App'
+import { StateT, ViewsT } from '../../App'
 import { ChangeEvent } from 'react'
 
-export type InputPropsType = {
-  inputID: string
+export type InputPT = {
+  inputType: string
   title: string
-  frameID: string
-  values: ValuesType
-  setMinValue: (value: number) => void
-  setMaxValue: (value: number) => void
-  setStartValue: (value: number) => void
-  setCounterValue: (value: number) => void
+  view: ViewsT
+  state: StateT
   isActiveSet: boolean
-  setIsActiveSet: (isActiveSet: boolean) => void
+  onClickSetButtonHandler: (value: boolean) => void
 }
 
-export const Input = (
-  {
-    inputID, title, frameID, values,
-    isActiveSet, setIsActiveSet,
-    setMinValue, setMaxValue, setStartValue, setCounterValue,
-  }: InputPropsType) => {
+export const Input = ({ inputType, title, state, isActiveSet, onClickSetButtonHandler }: InputPT) => {
 
-  const inputStyle = `
+  const inputStyles = `
   ${s.input}
-  ${values.minValue >= values.maxValue ? s.wrongValue
-    : values.maxValue <= values.minValue ? s.wrongValue
-      : values.startValue < values.minValue ? s.wrongValue
-        : values.startValue > values.maxValue ? s.wrongValue
+  ${state.values.minValue >= state.values.maxValue ? s.wrongValue
+    : state.values.maxValue <= state.values.minValue ? s.wrongValue
+      : state.values.startValue < state.values.minValue ? s.wrongValue
+        : state.values.startValue > state.values.maxValue ? s.wrongValue
           : ''
-  }
-  `
+  }`
 
-  const onFocusHandler = (value: boolean) => setIsActiveSet(value)
-  const inputValue = inputID === 'max' ? values.maxValue
-    : inputID === 'min' ? values.minValue
-      : values.startValue
+  const inputValue =
+    inputType === 'max' ? state.values.maxValue
+      : inputType === 'min' ? state.values.minValue
+        : state.values.startValue
+
+  const onFocusHandler = (value: boolean) => onClickSetButtonHandler(value)
+
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (inputID === 'min') {
-      console.log('min changed')
-      setMinValue(Number(e.currentTarget.value))
-
-    }
-    if (inputID === 'max') {
-      console.log('max changed')
-      setMaxValue(Number(e.currentTarget.value))
-    }
-    if (inputID === 'start') {
-      console.log('start changed')
-      setStartValue(Number(e.currentTarget.value))
-    }
+    inputType === 'min' && state.controls.setMinValue(Number(e.currentTarget.value))
+    inputType === 'max' && state.controls.setMaxValue(Number(e.currentTarget.value))
+    inputType === 'start' && state.controls.setStartValue(Number(e.currentTarget.value))
   }
+
   return (
     <div className={s.inputWrapper}>
       <div className={s.value}>{title}</div>
-      <input className={inputStyle}
+      <input className={inputStyles}
              value={inputValue}
              type="number"
              onChange={onChangeHandler}
              onFocus={() => {
                isActiveSet = false
                onFocusHandler(isActiveSet)
-               console.log(isActiveSet)
+             }}
+             onBlur={() => {
+               isActiveSet = true
+               onFocusHandler(isActiveSet)
              }}
       />
     </div>

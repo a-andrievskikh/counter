@@ -1,54 +1,38 @@
-import { useState } from 'react'
 import s from './Frame.module.css'
 import { FrameDisplay } from './FrameDisplay/FrameDisplay'
 import { FrameMenu } from './FrameMenu/FrameMenu'
-import { ValuesType } from '../../App'
+import { StateT, ViewsT } from '../../App'
 
-export type FramePropsType = {
-  frameID: string
-  values: ValuesType
-  increaseCounterValue: () => void
-  decreaseCounterValue: () => void
-  resetCounterValue: () => void
-  setCounterValue: (value: number) => void
-  setMinValue: (value: number) => void
-  setMaxValue: (value: number) => void
-  setStartValue: (value: number) => void
+export type FramePT = {
+  view: ViewsT
+  state: StateT
   isActiveSet: boolean
   setIsActiveSet: (isActiveSet: boolean) => void
 }
 
-export const Frame = (
-  {
-    frameID, values, increaseCounterValue, decreaseCounterValue, resetCounterValue,
-    setMinValue, setMaxValue, setStartValue, setCounterValue, isActiveSet, setIsActiveSet,
-  }: FramePropsType) => {
-
-
+export const Frame = ({ view, state, isActiveSet, setIsActiveSet }: FramePT) => {
+  const onClickSetButtonHandler = (value: boolean) => {
+    state.controls.setStartValue(state.values.startValue)
+    state.controls.setMinValue(state.values.minValue)
+    state.controls.setMaxValue(state.values.maxValue)
+    state.controls.setValue(state.values.startValue)
+    setIsActiveSet(value)
+  }
   return (
     <div className={s.main}>
-      <FrameDisplay frameID={frameID}
-                    values={values}
-                    setCounterValue={setCounterValue}
-                    setMinValue={(value) => setMinValue(value)}
-                    setMaxValue={(value) => setMaxValue(value)}
-                    setStartValue={(value) => setStartValue(value)}
+      <FrameDisplay view={view}
+                    state={state}
                     isActiveSet={isActiveSet}
-                    setIsActiveSet={setIsActiveSet}
+                    onClickSetButtonHandler={onClickSetButtonHandler}
       />
-      <FrameMenu frameID={frameID}
-                 values={values}
+      <FrameMenu view={view}
+                 state={state}
                  isActiveSet={isActiveSet}
-                 setIsActiveSet={setIsActiveSet}
-                 setCounterValue={setCounterValue}
-                 setStartValue={setStartValue}
-                 increaseCounterValue={increaseCounterValue}
-                 decreaseCounterValue={decreaseCounterValue}
-                 resetCounterValue={resetCounterValue}
-                 setMinValue={(value) => setMinValue(value)}
-                 setMaxValue={(value) => setMaxValue(value)}
+                 onClickSetButtonHandler={onClickSetButtonHandler}
       />
     </div>
   )
 }
+
+
 

@@ -1,16 +1,16 @@
 import s from '../Button/Button.module.css'
-import { ValuesType } from '../../App'
+import { ValuesT } from '../../App'
 
-export type ButtonPropsType = {
+export type ButtonPT = {
   title: string
-  values: ValuesType
+  values: ValuesT
   isActiveSet?: boolean
   onClickHandler?: () => void
   onClickSetButtonHandler?: (value: boolean) => void
   disabled: boolean
 }
 export const Button = (
-  { title, values, isActiveSet, onClickHandler, onClickSetButtonHandler, disabled }: ButtonPropsType) => {
+  { title, values, isActiveSet, onClickHandler, onClickSetButtonHandler, disabled }: ButtonPT) => {
 
   const buttonStyle = `
     ${s.button}

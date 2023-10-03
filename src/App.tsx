@@ -1,41 +1,74 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import s from './App.module.css'
 import { Frame } from './components/Frame/Frame'
-
-export type FramesType = {
-  frameID: 'settings' | 'counter'
-}
-export type ValuesType = {
-  counterValue: number,
-  startValue: number,
-  minValue: number,
-  maxValue: number,
-  resetValue: number,
-}
+import { restoreState, saveState } from './utils/local-storage'
 
 export const App = () => {
-  const frames: FramesType[] = [
-    { frameID: 'settings' },
-    { frameID: 'counter' },
+  const frames: FramesT[] = [
+    { view: 'settings' },
+    { view: 'counter' },
   ]
+
   const [isActiveSet, setIsActiveSet] = useState<boolean>(true)
-  const [values, setValues] = useState<ValuesType>({
-    counterValue: 0,
-    startValue: 0,
-    minValue: 0,
-    maxValue: 0,
-    resetValue: 0,
+
+  const [state, setState] = useState<StateT>({
+    values: restoreState<ValuesT>(
+      'values',
+      {
+        counterValue: 0,
+        startValue: 0,
+        minValue: 0,
+        maxValue: 0,
+        resetValue: 0,
+      }),
+    controls: {
+      incValue() {
+        setState(prevState => ({
+          ...prevState,
+          values: { ...prevState.values, counterValue: prevState.values.counterValue + 1 },
+        }))
+      },
+      decValue() {
+        setState(prevState => ({
+          ...prevState,
+          values: { ...prevState.values, counterValue: prevState.values.counterValue - 1 },
+        }))
+      },
+      resValue() {
+        setState(prevState => ({
+          ...prevState,
+          values: { ...prevState.values, counterValue: prevState.values.startValue },
+        }))
+      },
+      setValue(value: number) {
+        setState(prevState => ({ ...prevState, values: { ...prevState.values, counterValue: value } }))
+      },
+      setMinValue(value: number) {
+        setState(prevState => ({ ...prevState, values: { ...prevState.values, minValue: value } }))
+      },
+      setMaxValue(value: number) {
+        setState(prevState => ({ ...prevState, values: { ...prevState.values, maxValue: value } }))
+      },
+      setStartValue(value: number) {
+        setState(prevState => ({ ...prevState, values: { ...prevState.values, startValue: value } }))
+      },
+    },
   })
-  const increaseCounterValue = () => {
+
+  useEffect(() => {
+    saveState('values', state.values)
+  }, [state.values])
+
+  /*const incValue = () => {
     setValues({ ...values, counterValue: values.counterValue + 1 })
   }
-  const decreaseCounterValue = () => {
+  const decValue = () => {
     setValues({ ...values, counterValue: values.counterValue - 1 })
   }
-  const resetCounterValue = () => {
-    setValues({ ...values, counterValue: values.counterValue = values.resetValue })
+  const resValue = () => {
+    setValues({ ...values, counterValue: values.counterValue = values.startValue })
   }
-  const setCounterValue = (value: number) => {
+  const setValue = (value: number) => {
     setValues({ ...values, counterValue: value })
   }
   const setMinValue = (value: number) => {
@@ -46,30 +79,44 @@ export const App = () => {
   }
   const setStartValue = (value: number) => {
     setValues({ ...values, startValue: value })
-  }
+  }*/
 
-  console.log('App rendered')
   return (
     <div className={s.App}>
       {
-        frames.map(f => {
-          return (
-            <Frame key={f.frameID}
-                   frameID={f.frameID}
-                   values={values}
-                   increaseCounterValue={increaseCounterValue}
-                   decreaseCounterValue={decreaseCounterValue}
-                   resetCounterValue={resetCounterValue}
-                   setCounterValue={setCounterValue}
-                   setMinValue={setMinValue}
-                   setMaxValue={setMaxValue}
-                   setStartValue={setStartValue}
-                   isActiveSet={isActiveSet}
-                   setIsActiveSet={setIsActiveSet}
-            />
-          )
-        })
+        frames.map(f =>
+          <Frame key={f.view}
+                 view={f.view}
+                 state={state}
+                 isActiveSet={isActiveSet}
+                 setIsActiveSet={setIsActiveSet}
+          />
+        )
       }
     </div>
   )
+}
+
+// Types
+export type ViewsT = 'settings' | 'counter'
+export type FramesT = { view: ViewsT }
+export type StateT = {
+  values: ValuesT
+  controls: ControlsT
+}
+export type ValuesT = {
+  counterValue: number,
+  startValue: number,
+  minValue: number,
+  maxValue: number,
+  resetValue: number,
+}
+export type ControlsT = {
+  incValue: () => void
+  decValue: () => void
+  resValue: () => void
+  setValue: (value: number) => void
+  setMinValue: (value: number) => void
+  setMaxValue: (value: number) => void
+  setStartValue: (value: number) => void
 }
