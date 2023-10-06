@@ -1,39 +1,26 @@
 import s from '../Button/Button.module.css'
-import { ValuesT } from '../../App'
 
-export type ButtonPT = {
-  title: string
-  values: ValuesT
-  isActiveSet?: boolean
-  onClickHandler?: () => void
-  onClickSetButtonHandler?: (value: boolean) => void
-  disabled: boolean
-}
-export const Button = (
-  { title, values, isActiveSet, onClickHandler, onClickSetButtonHandler, disabled }: ButtonPT) => {
 
-  const buttonStyle = `
+export const Button = ({
+                         title, isActiveSetBtn, onClickHandler,
+                         onClickSetBtnHandler, disabled,
+                       }: ButtonPT) => {
+
+  const buttonStyles = `
     ${s.button}
-    ${title === 'DEC' && (values.counterValue <= values.minValue || values.minValue >= values.maxValue) ? s.disabled
-    : title === 'RESET' && values.counterValue === values.resetValue ? s.disabled
-      : title === 'INC' && (values.counterValue >= values.maxValue || values.maxValue <= values.minValue) ? s.disabled
-        : title === 'SET' && (isActiveSet || isActiveSet || values.startValue < values.minValue || values.startValue > values.maxValue) ? s.disabled
-          : ''}
+    ${disabled ? s.disabled : ''}
     `
 
   return (
     title === 'SET' ? (
-      <button className={buttonStyle}
-              onClick={() => {
-                isActiveSet = true
-                onClickSetButtonHandler?.(isActiveSet)
-              }}
+      <button className={buttonStyles}
+              onClick={() => onClickSetBtnHandler?.(!isActiveSetBtn)}
               disabled={disabled}
       >
         {title}
       </button>
     ) : (
-      <button className={buttonStyle}
+      <button className={buttonStyles}
               onClick={onClickHandler}
               disabled={disabled}
       >
@@ -41,4 +28,13 @@ export const Button = (
       </button>
     )
   )
+}
+
+// Types
+export type ButtonPT = {
+  title: string
+  isActiveSetBtn?: boolean
+  onClickHandler?: () => void
+  onClickSetBtnHandler?: (value: boolean) => void
+  disabled: boolean
 }

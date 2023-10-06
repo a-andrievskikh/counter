@@ -9,15 +9,21 @@
   height: 250px;
   border-radius: 20px;
   background-color: #6ee0f8;
-  font-size: 100px;
+  font-size: 120px;
   font-weight: 700;
   color: #2e2d36;
+  font-family: Roboto, Arial, sans-serif;
 }
 
-.counterDisplayStopNumber {
+.counterStopNumber {
   color: #de0045;
 }
 
-.setStyle {
+.incorrectStartValue {
+  font-size: 44px;
+  color: #de0045;
+}
+
+.setBtnStyle {
   font-size: 36px;
 }

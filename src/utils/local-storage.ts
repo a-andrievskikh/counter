@@ -1,8 +1,7 @@
 // save data to local storage
-export const saveState = <T>(key: string, state: T) => {
-  const stateAsString = JSON.stringify(state)
-  localStorage.setItem(key, stateAsString)
-}
+export const saveState = <T>(key: string, state: T) =>
+  localStorage.setItem(key, JSON.stringify(state))
+
 
 // get local storage data
 export const restoreState = <T>(key: string, defaultState: T) => {

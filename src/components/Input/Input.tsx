@@ -1,57 +1,49 @@
 import s from './Input.module.css'
 import { StateT, ViewsT } from '../../App'
 import { ChangeEvent } from 'react'
+import { InputT } from '../Frame/FrameDisplay/FrameDisplay'
 
-export type InputPT = {
-  inputType: string
-  title: string
-  view: ViewsT
-  state: StateT
-  isActiveSet: boolean
-  onClickSetButtonHandler: (value: boolean) => void
-}
 
-export const Input = ({ inputType, title, state, isActiveSet, onClickSetButtonHandler }: InputPT) => {
+export const Input = ({
+                        input, state, onClickSetBtnHandler, incorrectStartValue,
+                      }: InputPT) => {
 
-  const inputStyles = `
-  ${s.input}
-  ${state.values.minValue >= state.values.maxValue ? s.wrongValue
-    : state.values.maxValue <= state.values.minValue ? s.wrongValue
-      : state.values.startValue < state.values.minValue ? s.wrongValue
-        : state.values.startValue > state.values.maxValue ? s.wrongValue
-          : ''
-  }`
+  const wrongValues = (input.type === 'min' && state.values.minValue > state.values.maxValue)
+    || (input.type === 'max' && state.values.maxValue < state.values.minValue) || incorrectStartValue
+
+  const inputStyles = `${s.input}  ${wrongValues ? s.wrongValue : ''}`
 
   const inputValue =
-    inputType === 'max' ? state.values.maxValue
-      : inputType === 'min' ? state.values.minValue
+    input.type === 'max' ? state.values.maxValue
+      : input.type === 'min' ? state.values.minValue
         : state.values.startValue
 
-  const onFocusHandler = (value: boolean) => onClickSetButtonHandler(value)
-
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    inputType === 'min' && state.controls.setMinValue(Number(e.currentTarget.value))
-    inputType === 'max' && state.controls.setMaxValue(Number(e.currentTarget.value))
-    inputType === 'start' && state.controls.setStartValue(Number(e.currentTarget.value))
+    input.type === 'min' && state.controls.setMinValue(Number(e.currentTarget.value))
+    input.type === 'max' && state.controls.setMaxValue(Number(e.currentTarget.value))
+    input.type === 'start' && state.controls.setStartValue(Number(e.currentTarget.value))
   }
 
   return (
     <div className={s.inputWrapper}>
-      <div className={s.value}>{title}</div>
+      <div className={s.value}>{`${input.title}:`}</div>
       <input className={inputStyles}
              value={inputValue}
              type="number"
              onChange={onChangeHandler}
-             onFocus={() => {
-               isActiveSet = false
-               onFocusHandler(isActiveSet)
-             }}
-             onBlur={() => {
-               isActiveSet = true
-               onFocusHandler(isActiveSet)
-             }}
+             onFocus={() => onClickSetBtnHandler(false)}
       />
     </div>
   )
+}
+
+// Types
+export type InputPT = {
+  input: InputT
+  view: ViewsT
+  state: StateT
+  isActiveSet: boolean
+  onClickSetBtnHandler: (value: boolean) => void
+  incorrectStartValue: boolean
 }
 

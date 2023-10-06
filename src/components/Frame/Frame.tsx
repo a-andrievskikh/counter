@@ -3,35 +3,40 @@ import { FrameDisplay } from './FrameDisplay/FrameDisplay'
 import { FrameMenu } from './FrameMenu/FrameMenu'
 import { StateT, ViewsT } from '../../App'
 
-export type FramePT = {
-  view: ViewsT
-  state: StateT
-  isActiveSet: boolean
-  setIsActiveSet: (isActiveSet: boolean) => void
-}
 
-export const Frame = ({ view, state, isActiveSet, setIsActiveSet }: FramePT) => {
-  const onClickSetButtonHandler = (value: boolean) => {
-    state.controls.setStartValue(state.values.startValue)
-    state.controls.setMinValue(state.values.minValue)
-    state.controls.setMaxValue(state.values.maxValue)
-    state.controls.setValue(state.values.startValue)
-    setIsActiveSet(value)
+export const Frame = ({ view, state, isActiveSetBtn, setIsActiveSetBtn }: FramePT) => {
+
+  const onClickSetBtnHandler = (value: boolean) => {
+    state.controls.setCounterValue(state.values.startValue)
+    setIsActiveSetBtn(value)
   }
+
+  const incorrectStartValue = state.values.startValue <= state.values.minValue || state.values.startValue >= state.values.maxValue
+
   return (
     <div className={s.main}>
       <FrameDisplay view={view}
                     state={state}
-                    isActiveSet={isActiveSet}
-                    onClickSetButtonHandler={onClickSetButtonHandler}
+                    isActiveSetBtn={isActiveSetBtn}
+                    onClickSetBtnHandler={onClickSetBtnHandler}
+                    incorrectStartValue={incorrectStartValue}
       />
       <FrameMenu view={view}
                  state={state}
-                 isActiveSet={isActiveSet}
-                 onClickSetButtonHandler={onClickSetButtonHandler}
+                 isActiveSetBtn={isActiveSetBtn}
+                 onClickSetBtnHandler={onClickSetBtnHandler}
+                 incorrectStartValue={incorrectStartValue}
       />
     </div>
   )
+}
+
+// Types
+export type FramePT = {
+  view: ViewsT
+  state: StateT
+  isActiveSetBtn: boolean
+  setIsActiveSetBtn: (value: boolean) => void
 }
 
 
