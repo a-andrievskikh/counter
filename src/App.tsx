@@ -36,9 +36,6 @@ export const App = () => {
             values: { ...prevValues.values, counterValue: prevValues.values.startValue },
           }))
         },
-        setCounterValue(value: number) {
-          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, counterValue: value } }))
-        },
         setMinValue(value: number) {
           setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, minValue: value } }))
         },
@@ -48,10 +45,18 @@ export const App = () => {
         setStartValue(value: number) {
           setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, startValue: value } }))
         },
+        setCounterValue(value: number) {
+          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, counterValue: value } }))
+        },
       },
     },
   )
   const [isActiveSetBtn, setIsActiveSetBtn] = useState<boolean>(true)
+
+  const [inputMinValue, setInputMinValue] = useState<number>(state.values.minValue)
+  const [inputMaxValue, setInputMaxValue] = useState<number>(state.values.maxValue)
+  const [inputStartValue, setInputStartValue] = useState<number>(state.values.startValue)
+  const [inputCounterValue, setInputCounterValue] = useState<number>(state.values.counterValue)
 
   useEffect(() => {
     saveState('values', state.values)
@@ -66,6 +71,14 @@ export const App = () => {
                  state={state}
                  isActiveSetBtn={isActiveSetBtn}
                  setIsActiveSetBtn={setIsActiveSetBtn}
+                 inputMinValue={inputMinValue}
+                 inputMaxValue={inputMaxValue}
+                 inputStartValue={inputStartValue}
+                 inputCounterValue={inputCounterValue}
+                 setInputMinValue={setInputMinValue}
+                 setInputMaxValue={setInputMaxValue}
+                 setInputStartValue={setInputStartValue}
+                 setInputCounterValue={setInputCounterValue}
           />,
         )
       }

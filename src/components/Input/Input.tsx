@@ -1,16 +1,21 @@
 import s from './Input.module.css'
 import { StateT, ViewsT } from '../../App'
 import { ChangeEvent } from 'react'
-import { InputT } from '../Frame/FrameDisplay/FrameDisplay'
+import { InputT, InputTypeValuesT } from '../Frame/FrameDisplay/FrameDisplay'
 
 
 export const Input = ({
-                        input,
-                        state: {
-                          values: { minValue, maxValue, startValue },
-                          controls: { setMinValue, setMaxValue, setStartValue },
-                        }, onClickSetBtnHandler, incorrectStartValue, setIsActiveSetBtn,
+                        input, state, onClickSetBtnHandler,
+                        incorrectStartValue,
+                        inputMinValue,
+                        inputMaxValue,
+                        inputStartValue,
+                        setInputMinValue,
+                        setInputMaxValue,
+                        setInputStartValue,
+                        setInputCounterValue,
                       }: InputPT) => {
+  const { minValue, maxValue } = state.values
 
   const wrongValues =
     (input.type === 'min' && minValue > maxValue) ||
@@ -20,18 +25,25 @@ export const Input = ({
   const inputStyles = `${s.input}  ${wrongValues ? s.wrongValue : ''}`
 
   const inputValue =
-    input.type === 'max' ? maxValue :
-      input.type === 'min' ? minValue :
-        startValue
+    input.type === 'min' ? inputMinValue :
+      input.type === 'max' ? inputMaxValue :
+        inputStartValue
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    input.type === 'min' && setMinValue(Number(e.currentTarget.value))
-    input.type === 'max' && setMaxValue(Number(e.currentTarget.value))
-    input.type === 'start' && setStartValue(Number(e.currentTarget.value))
+    if (input.type === 'min') {
+      setInputMinValue(Number(e.currentTarget.value))
+    }
+    if (input.type === 'max') {
+      setInputMaxValue(Number(e.currentTarget.value))
+    }
+    if (input.type === 'start') {
+      setInputStartValue(Number(e.currentTarget.value))
+      setInputCounterValue(Number(e.currentTarget.value))
+    }
   }
+
   const onFocusHandler = () => {
-    input.type === 'start' && onClickSetBtnHandler(false)
-    input.type !== 'start' && setIsActiveSetBtn(false)
+    onClickSetBtnHandler(false)
   }
 
   return (
@@ -56,5 +68,14 @@ export type InputPT = {
   setIsActiveSetBtn: (value: boolean) => void
   onClickSetBtnHandler: (value: boolean) => void
   incorrectStartValue: boolean
+  inputSetBtn: (inputType: InputTypeValuesT) => void
+  inputMinValue: number
+  inputMaxValue: number
+  inputStartValue: number
+  inputCounterValue: number
+  setInputMinValue: (value: number) => void
+  setInputMaxValue: (value: number) => void
+  setInputStartValue: (value: number) => void
+  setInputCounterValue: (value: number) => void
 }
 

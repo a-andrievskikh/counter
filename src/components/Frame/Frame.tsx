@@ -4,16 +4,30 @@ import { FrameMenu } from './FrameMenu/FrameMenu'
 import { StateT, ViewsT } from '../../App'
 
 
-export const Frame = ({ view, state, isActiveSetBtn, setIsActiveSetBtn }: FramePT) => {
-  const { values, controls } = state
+export const Frame = ({
+                        view, state, isActiveSetBtn, setIsActiveSetBtn,
+                        inputMinValue,
+                        inputMaxValue,
+                        inputStartValue,
+                        inputCounterValue,
+                        setInputMinValue,
+                        setInputMaxValue,
+                        setInputStartValue,
+                        setInputCounterValue,
+                      }: FramePT) => {
+  const { controls } = state
 
   const onClickSetBtnHandler = (value: boolean) => {
-    controls.setCounterValue(values.startValue)
     setIsActiveSetBtn(value)
   }
+  const inputSetBtn = () => {
+    controls.setMinValue(inputMinValue)
+    controls.setMaxValue(inputMaxValue)
+    controls.setStartValue(inputStartValue)
+    controls.setCounterValue(inputCounterValue)
+  }
 
-  const incorrectStartValue =
-    values.startValue <= values.minValue || values.startValue >= values.maxValue
+  const incorrectStartValue = inputStartValue < inputMinValue || inputStartValue > inputMaxValue
 
   return (
     <div className={s.main}>
@@ -23,12 +37,22 @@ export const Frame = ({ view, state, isActiveSetBtn, setIsActiveSetBtn }: FrameP
                     setIsActiveSetBtn={setIsActiveSetBtn}
                     onClickSetBtnHandler={onClickSetBtnHandler}
                     incorrectStartValue={incorrectStartValue}
+                    inputSetBtn={inputSetBtn}
+                    inputMinValue={inputMinValue}
+                    inputMaxValue={inputMaxValue}
+                    inputStartValue={inputStartValue}
+                    inputCounterValue={inputCounterValue}
+                    setInputMinValue={setInputMinValue}
+                    setInputMaxValue={setInputMaxValue}
+                    setInputStartValue={setInputStartValue}
+                    setInputCounterValue={setInputCounterValue}
       />
       <FrameMenu view={view}
                  state={state}
                  isActiveSetBtn={isActiveSetBtn}
                  onClickSetBtnHandler={onClickSetBtnHandler}
                  incorrectStartValue={incorrectStartValue}
+                 inputSetBtn={inputSetBtn}
       />
     </div>
   )
@@ -40,6 +64,14 @@ export type FramePT = {
   state: StateT
   isActiveSetBtn: boolean
   setIsActiveSetBtn: (value: boolean) => void
+  inputMinValue: number
+  inputMaxValue: number
+  inputStartValue: number
+  inputCounterValue: number
+  setInputMinValue: (value: number) => void
+  setInputMaxValue: (value: number) => void
+  setInputStartValue: (value: number) => void
+  setInputCounterValue: (value: number) => void
 }
 
 

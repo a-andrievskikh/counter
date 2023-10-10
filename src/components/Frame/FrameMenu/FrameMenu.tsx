@@ -16,7 +16,7 @@ const getButtonStates = (state: StateT, isActiveSetBtn: boolean, incorrectStartV
 
 export const FrameMenu = ({
                             view, state, isActiveSetBtn,
-                            onClickSetBtnHandler, incorrectStartValue,
+                            onClickSetBtnHandler, incorrectStartValue, inputSetBtn,
                           }: FrameMenuPT) => {
   const { controls } = state
   const {
@@ -34,6 +34,8 @@ export const FrameMenu = ({
                   isActiveSetBtn={isActiveSetBtn}
                   onClickSetBtnHandler={onClickSetBtnHandler}
                   disabled={setButtonDisabled}
+                  state={state}
+                  inputSetBtn={inputSetBtn}
           />
           :
           <>
@@ -56,4 +58,5 @@ export type FrameMenuPT = {
   isActiveSetBtn: boolean
   onClickSetBtnHandler: (value: boolean) => void
   incorrectStartValue: boolean
+  inputSetBtn: () => void
 }
