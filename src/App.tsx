@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import s from './App.module.css'
 import { Frame } from './components/Frame/Frame'
 import { restoreState, saveState } from './utils/local-storage'
-import { useControls } from './hooks/useControls'
 
 
 export const App = () => {
@@ -10,20 +9,53 @@ export const App = () => {
     { view: 'settings' },
     { view: 'counter' },
   ]
-  const { values, controls }: StateT = useControls(
-    restoreState('values', {
-      counterValue: 0,
-      minValue: 0,
-      maxValue: 0,
-      startValue: 0,
-      resetValue: 0,
-    }),
+  const [state, setState] = useState<StateT>({
+      values: restoreState('values', {
+        counterValue: 0,
+        minValue: 0,
+        maxValue: 0,
+        startValue: 0,
+        resetValue: 0,
+      }),
+      controls: {
+        incValue() {
+          setState((prevValues) => ({
+            ...prevValues,
+            values: { ...prevValues.values, counterValue: prevValues.values.counterValue + 1 },
+          }))
+        },
+        decValue() {
+          setState((prevValues) => ({
+            ...prevValues,
+            values: { ...prevValues.values, counterValue: prevValues.values.counterValue - 1 },
+          }))
+        },
+        resValue() {
+          setState((prevValues) => ({
+            ...prevValues,
+            values: { ...prevValues.values, counterValue: prevValues.values.startValue },
+          }))
+        },
+        setCounterValue(value: number) {
+          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, counterValue: value } }))
+        },
+        setMinValue(value: number) {
+          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, minValue: value } }))
+        },
+        setMaxValue(value: number) {
+          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, maxValue: value } }))
+        },
+        setStartValue(value: number) {
+          setState((prevValues) => ({ ...prevValues, values: { ...prevValues.values, startValue: value } }))
+        },
+      },
+    },
   )
   const [isActiveSetBtn, setIsActiveSetBtn] = useState<boolean>(true)
 
   useEffect(() => {
-    saveState('values', values)
-  }, [values])
+    saveState('values', state.values)
+  }, [state.values])
 
   return (
     <div className={s.App}>
@@ -31,7 +63,7 @@ export const App = () => {
         frames.map(f =>
           <Frame key={f.view}
                  view={f.view}
-                 state={{ values, controls }}
+                 state={state}
                  isActiveSetBtn={isActiveSetBtn}
                  setIsActiveSetBtn={setIsActiveSetBtn}
           />,
