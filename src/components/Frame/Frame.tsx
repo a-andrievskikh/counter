@@ -14,13 +14,13 @@ export const Frame = ({ view, state, isActiveSetBtn, setIsActiveSetBtn }: FrameP
 
   const incorrectStartValue =
     values.startValue <= values.minValue || values.startValue >= values.maxValue
-    || values.counterValue <= values.minValue || values.counterValue >= values.maxValue
 
   return (
     <div className={s.main}>
       <FrameDisplay view={view}
                     state={state}
                     isActiveSetBtn={isActiveSetBtn}
+                    setIsActiveSetBtn={setIsActiveSetBtn}
                     onClickSetBtnHandler={onClickSetBtnHandler}
                     incorrectStartValue={incorrectStartValue}
       />

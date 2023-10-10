@@ -9,7 +9,7 @@ export const Input = ({
                         state: {
                           values: { minValue, maxValue, startValue },
                           controls: { setMinValue, setMaxValue, setStartValue },
-                        }, onClickSetBtnHandler, incorrectStartValue,
+                        }, onClickSetBtnHandler, incorrectStartValue, setIsActiveSetBtn,
                       }: InputPT) => {
 
   const wrongValues =
@@ -29,6 +29,10 @@ export const Input = ({
     input.type === 'max' && setMaxValue(Number(e.currentTarget.value))
     input.type === 'start' && setStartValue(Number(e.currentTarget.value))
   }
+  const onFocusHandler = () => {
+    input.type === 'start' && onClickSetBtnHandler(false)
+    input.type !== 'start' && setIsActiveSetBtn(false)
+  }
 
   return (
     <div className={s.inputWrapper}>
@@ -37,7 +41,7 @@ export const Input = ({
              value={inputValue}
              type="number"
              onChange={onChangeHandler}
-             onFocus={() => onClickSetBtnHandler(false)}
+             onFocus={onFocusHandler}
       />
     </div>
   )
@@ -49,6 +53,7 @@ export type InputPT = {
   view: ViewsT
   state: StateT
   isActiveSet: boolean
+  setIsActiveSetBtn: (value: boolean) => void
   onClickSetBtnHandler: (value: boolean) => void
   incorrectStartValue: boolean
 }

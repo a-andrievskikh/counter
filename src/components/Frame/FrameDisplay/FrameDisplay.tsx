@@ -4,18 +4,19 @@ import { StateT, ViewsT } from '../../../App'
 
 
 export const FrameDisplay = ({
-                               view, state, isActiveSetBtn,
+                               view, state, isActiveSetBtn, setIsActiveSetBtn,
                                onClickSetBtnHandler, incorrectStartValue,
                              }: FrameDisplayPT) => {
 
-  const { values: { counterValue } } = state
+  const { values: { counterValue, minValue, maxValue } } = state
   const inputs: InputT[] = [
     { type: 'min', title: 'min value' },
     { type: 'max', title: 'max value' },
     { type: 'start', title: 'start value' },
   ]
-  const displayValueStyles = `${s.counterDisplay} ${incorrectStartValue ? s.counterStopNumber : ''}`
-  const incorrectStartValueStyles = `${incorrectStartValue ? s.incorrectStartValue : ''}`
+  const counterStopNumber = counterValue <= minValue || counterValue >= maxValue
+  const displayValueStyles = `${s.counterDisplay} ${counterStopNumber && s.counterStopNumber}`
+  const incorrectStartValueStyles = `${incorrectStartValue && s.incorrectStartValue}`
 
   return (
     <div className={s.counterDisplay}>
@@ -29,6 +30,7 @@ export const FrameDisplay = ({
                        view={view}
                        state={state}
                        isActiveSet={isActiveSetBtn}
+                       setIsActiveSetBtn={setIsActiveSetBtn}
                        onClickSetBtnHandler={onClickSetBtnHandler}
                        incorrectStartValue={incorrectStartValue}
                 />,
@@ -56,6 +58,7 @@ export type FrameDisplayPT = {
   view: ViewsT
   state: StateT
   isActiveSetBtn: boolean
+  setIsActiveSetBtn: (value: boolean) => void
   onClickSetBtnHandler: (value: boolean) => void
   incorrectStartValue: boolean
 }
