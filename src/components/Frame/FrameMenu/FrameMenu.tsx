@@ -2,22 +2,29 @@ import s from './FrameMenu.module.css'
 import { Button } from '../../Button/Button'
 import { StateT, ViewsT } from '../../../App'
 
+const getButtonStates = (state: StateT, isActiveSetBtn: boolean, incorrectStartValue: boolean) => {
+  const decButtonDisabled =
+    !isActiveSetBtn || state.values.counterValue <= state.values.minValue || state.values.startValue <= state.values.minValue
+  const incButtonDisabled =
+    !isActiveSetBtn || state.values.counterValue >= state.values.maxValue || state.values.startValue >= state.values.maxValue
+  const resButtonDisabled =
+    !isActiveSetBtn || state.values.counterValue === state.values.startValue
+  const setButtonDisabled = isActiveSetBtn || incorrectStartValue
+
+  return { decButtonDisabled, incButtonDisabled, resButtonDisabled, setButtonDisabled }
+}
 
 export const FrameMenu = ({
                             view, state, isActiveSetBtn,
                             onClickSetBtnHandler, incorrectStartValue,
                           }: FrameMenuPT) => {
-
-  const decButtonDisabled =
-    !isActiveSetBtn || state.values.counterValue <= state.values.minValue || state.values.startValue <= state.values.minValue
-
-  const incButtonDisabled =
-    !isActiveSetBtn || state.values.counterValue >= state.values.maxValue || state.values.startValue >= state.values.maxValue
-
-  const resButtonDisabled =
-    !isActiveSetBtn || state.values.counterValue === state.values.resetValue
-
-  const setButtonDisabled = isActiveSetBtn || incorrectStartValue
+  const { controls } = state
+  const {
+    decButtonDisabled,
+    incButtonDisabled,
+    resButtonDisabled,
+    setButtonDisabled,
+  } = getButtonStates(state, isActiveSetBtn, incorrectStartValue)
 
   return (
     <div className={s.counterMenu}>
@@ -30,11 +37,11 @@ export const FrameMenu = ({
           />
           :
           <>
-            <Button title={'DEC'} onClickHandler={state.controls.decValue}
+            <Button title={'DEC'} onClickHandler={controls.decValue}
                     disabled={decButtonDisabled} />
-            <Button title={'RESET'} onClickHandler={state.controls.resValue}
+            <Button title={'RESET'} onClickHandler={controls.resValue}
                     disabled={resButtonDisabled || incorrectStartValue} />
-            <Button title={'INC'} onClickHandler={state.controls.incValue}
+            <Button title={'INC'} onClickHandler={controls.incValue}
                     disabled={incButtonDisabled} />
           </>
       }

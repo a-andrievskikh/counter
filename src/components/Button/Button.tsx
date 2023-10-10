@@ -6,27 +6,16 @@ export const Button = ({
                          onClickSetBtnHandler, disabled,
                        }: ButtonPT) => {
 
-  const buttonStyles = `
-    ${s.button}
-    ${disabled ? s.disabled : ''}
-    `
+  const buttonStyles = `${s.button} ${disabled ? s.disabled : ''}`
+  const handleClick = title === 'SET' ? () => onClickSetBtnHandler?.(!isActiveSetBtn) : onClickHandler
 
   return (
-    title === 'SET' ? (
-      <button className={buttonStyles}
-              onClick={() => onClickSetBtnHandler?.(!isActiveSetBtn)}
-              disabled={disabled}
-      >
-        {title}
-      </button>
-    ) : (
-      <button className={buttonStyles}
-              onClick={onClickHandler}
-              disabled={disabled}
-      >
-        {title}
-      </button>
-    )
+    <button className={buttonStyles}
+            onClick={handleClick}
+            disabled={disabled}
+    >
+      {title}
+    </button>
   )
 }
 

@@ -8,16 +8,15 @@ export const FrameDisplay = ({
                                onClickSetBtnHandler, incorrectStartValue,
                              }: FrameDisplayPT) => {
 
-  const displayValueStyles = `${s.counterDisplay} ${incorrectStartValue ? s.counterStopNumber : ''}`
-  const incorrectStartValueStyles = `${incorrectStartValue ? s.incorrectStartValue : ''}`
-
+  const { values: { counterValue } } = state
   const inputs: InputT[] = [
     { type: 'min', title: 'min value' },
     { type: 'max', title: 'max value' },
     { type: 'start', title: 'start value' },
   ]
+  const displayValueStyles = `${s.counterDisplay} ${incorrectStartValue ? s.counterStopNumber : ''}`
+  const incorrectStartValueStyles = `${incorrectStartValue ? s.incorrectStartValue : ''}`
 
-  console.log('Frame Display Rendered!')
   return (
     <div className={s.counterDisplay}>
       {
@@ -40,8 +39,8 @@ export const FrameDisplay = ({
           <>
             {
               isActiveSetBtn
-                ? <div className={displayValueStyles}>{state.values.counterValue}</div>
-                : (!isActiveSetBtn && incorrectStartValue)
+                ? <div className={displayValueStyles}>{counterValue}</div>
+                : incorrectStartValue
                   ? <div className={incorrectStartValueStyles}>Incorrect value'!</div>
                   : <div className={s.setBtnStyle}>Enter values and press 'SET'</div>
             }

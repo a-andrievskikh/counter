@@ -5,23 +5,29 @@ import { InputT } from '../Frame/FrameDisplay/FrameDisplay'
 
 
 export const Input = ({
-                        input, state, onClickSetBtnHandler, incorrectStartValue,
+                        input,
+                        state: {
+                          values: { minValue, maxValue, startValue },
+                          controls: { setMinValue, setMaxValue, setStartValue },
+                        }, onClickSetBtnHandler, incorrectStartValue,
                       }: InputPT) => {
 
-  const wrongValues = (input.type === 'min' && state.values.minValue > state.values.maxValue)
-    || (input.type === 'max' && state.values.maxValue < state.values.minValue) || incorrectStartValue
+  const wrongValues =
+    (input.type === 'min' && minValue > maxValue) ||
+    (input.type === 'max' && maxValue < minValue) ||
+    incorrectStartValue
 
   const inputStyles = `${s.input}  ${wrongValues ? s.wrongValue : ''}`
 
   const inputValue =
-    input.type === 'max' ? state.values.maxValue
-      : input.type === 'min' ? state.values.minValue
-        : state.values.startValue
+    input.type === 'max' ? maxValue :
+      input.type === 'min' ? minValue :
+        startValue
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    input.type === 'min' && state.controls.setMinValue(Number(e.currentTarget.value))
-    input.type === 'max' && state.controls.setMaxValue(Number(e.currentTarget.value))
-    input.type === 'start' && state.controls.setStartValue(Number(e.currentTarget.value))
+    input.type === 'min' && setMinValue(Number(e.currentTarget.value))
+    input.type === 'max' && setMaxValue(Number(e.currentTarget.value))
+    input.type === 'start' && setStartValue(Number(e.currentTarget.value))
   }
 
   return (

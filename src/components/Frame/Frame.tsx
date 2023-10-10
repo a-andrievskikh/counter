@@ -5,13 +5,16 @@ import { StateT, ViewsT } from '../../App'
 
 
 export const Frame = ({ view, state, isActiveSetBtn, setIsActiveSetBtn }: FramePT) => {
+  const { values, controls } = state
 
   const onClickSetBtnHandler = (value: boolean) => {
-    state.controls.setCounterValue(state.values.startValue)
+    controls.setCounterValue(values.startValue)
     setIsActiveSetBtn(value)
   }
 
-  const incorrectStartValue = state.values.startValue <= state.values.minValue || state.values.startValue >= state.values.maxValue
+  const incorrectStartValue =
+    values.startValue <= values.minValue || values.startValue >= values.maxValue
+    || values.counterValue <= values.minValue || values.counterValue >= values.maxValue
 
   return (
     <div className={s.main}>
