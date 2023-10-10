@@ -2,45 +2,8 @@ import { useEffect, useState } from 'react'
 import s from './App.module.css'
 import { Frame } from './components/Frame/Frame'
 import { restoreState, saveState } from './utils/local-storage'
+import { useControls } from './hooks/useControls'
 
-const useControls = (initialValues: ValuesT) => {
-  const [values, setValues] = useState<ValuesT>(initialValues)
-
-  const incValue = () => {
-    setValues((prevValues) => ({ ...prevValues, counterValue: prevValues.counterValue + 1 }))
-  }
-  const decValue = () => {
-    setValues((prevValues) => ({ ...prevValues, counterValue: prevValues.counterValue - 1 }))
-  }
-  const resValue = () => {
-    setValues((prevValues) => ({ ...prevValues, counterValue: prevValues.startValue }))
-  }
-  const setCounterValue = (value: number) => {
-    setValues((prevValues) => ({ ...prevValues, counterValue: value }))
-  }
-  const setMinValue = (value: number) => {
-    setValues((prevValues) => ({ ...prevValues, minValue: value }))
-  }
-  const setMaxValue = (value: number) => {
-    setValues((prevValues) => ({ ...prevValues, maxValue: value }))
-  }
-  const setStartValue = (value: number) => {
-    setValues((prevValues) => ({ ...prevValues, startValue: value }))
-  }
-
-  return {
-    values,
-    controls: {
-      incValue,
-      decValue,
-      resValue,
-      setCounterValue,
-      setMinValue,
-      setMaxValue,
-      setStartValue,
-    },
-  }
-}
 
 export const App = () => {
   const frames: FramesT[] = [
